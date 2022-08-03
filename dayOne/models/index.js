@@ -34,6 +34,8 @@ db.reviews = require("./reviewModel.js")(sequelize, DataTypes);
 db.category = require("./CategoryModel.js")(sequelize, DataTypes);
 db.users = require("./UserSeqmodel.js")(sequelize, DataTypes);
 db.posts = require("./PostSeqModel.js")(sequelize, DataTypes);
+db.postTag = require("./postTagModel.js")(sequelize, DataTypes);
+db.tags = require("./tags.js")(sequelize, DataTypes);
 
 db.sequelize.sync({ force: false }).then(() => {
   console.log("yes re-sync done!");
@@ -51,12 +53,25 @@ db.reviews.belongsTo(db.products, {
   as: "product",
 });
 
-// user has One Relationship Or one to one Relationship
+// one to one  relationship //
 
 //db.users.hasOne(db.posts, { foreignKey: "user_id" });
-db.posts.belongsTo(db.users, { foreignKey: "user_id" });
 
-// One to Many Relationship
+// One to Many Relationship //
+
+db.posts.belongsTo(db.users, { foreignKey: "user_id" });
 db.users.hasMany(db.posts, { foreignKey: "user_id" });
+
+// Many to Many Relationship //
+db.posts.belongsToMany(
+  db.tags,
+  { through: "postTag" },
+  { foreignKey: "PostTableId" }
+);
+db.tags.belongsToMany(
+  db.posts,
+  { through: "postTag" },
+  { foreignKey: "PostTableId" }
+);
 
 module.exports = db;

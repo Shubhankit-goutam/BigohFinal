@@ -21,4 +21,10 @@ router.get("/getAllpost/:id", userController.getAllPost);
 router.get("/getBelongPost", userController.getBelongPost);
 
 router.get("/getOnetoMany", userController.getOnetoMany);
+
+// many to many
+router.post("/addtag", userController.addTag);
+router.post("/addPosttag", userController.addPostTag);
+router.get("/getManytoMany", userController.getManytoMany);
+
 module.exports = router;

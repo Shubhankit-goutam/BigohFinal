@@ -3,6 +3,8 @@ const db = require("../models");
 
 const Users = db.users;
 const Posts = db.posts;
+const Tags = db.tags;
+const PostTags = db.postTag;
 
 const addUser = async (req, res) => {
   let data = {
@@ -81,6 +83,39 @@ const getOnetoMany = async (req, res) => {
   res.status(200).send(postResult);
 };
 
+// add  tags
+const addTag = async (req, res) => {
+  let data = {
+    name: req.body.name,
+  };
+  const tagResult = await Tags.create(data);
+  res.status(200).send(tagResult);
+};
+
+// add  Posttags
+const addPostTag = async (req, res) => {
+  let data = {
+    postId: req.body.postId,
+    tagId: req.body.tagId,
+    PostTableId: req.body.postId,
+  };
+  const PosttagResult = await PostTags.create(data);
+  res.status(200).send(PosttagResult);
+};
+
+//Many to Many Realations
+
+const getManytoMany = async (req, res) => {
+  const postResult = await Posts.findAll({
+    include: [
+      {
+        model: Tags,
+      },
+    ],
+  });
+  res.status(200).send(postResult);
+};
+
 module.exports = {
   addUser,
   getAllUsers,
@@ -88,4 +123,7 @@ module.exports = {
   getAllPost,
   getBelongPost,
   getOnetoMany,
+  addTag,
+  addPostTag,
+  getManytoMany,
 };
