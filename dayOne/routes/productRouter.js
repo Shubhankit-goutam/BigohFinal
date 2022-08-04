@@ -27,4 +27,11 @@ router.post("/addtag", userController.addTag);
 router.post("/addPosttag", userController.addPostTag);
 router.get("/getManytoMany", userController.getManytoMany);
 
+//
+
+router.post("/addVideos", userController.addVideos);
+router.post("/addComments", userController.addComments);
+router.post("/addImages", userController.addImages);
+router.get("/getMiage", userController.getpolymorphic);
+
 module.exports = router;

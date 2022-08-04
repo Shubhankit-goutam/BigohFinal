@@ -5,6 +5,9 @@ const Users = db.users;
 const Posts = db.posts;
 const Tags = db.tags;
 const PostTags = db.postTag;
+const Comments = db.comments;
+const Videos = db.videos;
+const Images = db.images;
 
 const addUser = async (req, res) => {
   let data = {
@@ -24,7 +27,6 @@ const getAllUsers = async (req, res) => {
 // Posts controllers
 
 const addPost = async (req, res) => {
-  console.log(">>>>>>", req.body);
   let data = {
     name: req.body.name,
     title: req.body.title,
@@ -106,14 +108,86 @@ const addPostTag = async (req, res) => {
 //Many to Many Realations
 
 const getManytoMany = async (req, res) => {
+  // M to M for Post to Tags
   const postResult = await Posts.findAll({
+    attributes: ["name", "title", "description"],
     include: [
       {
         model: Tags,
+        attributes: ["name"],
       },
     ],
   });
+  // const postResult = await Tags.findAll({
+  //   include: [
+  //     {
+  //       model: Posts,
+  //     },
+  //   ],
+  // });
   res.status(200).send(postResult);
+};
+
+// One to One Poly.. //
+const addVideos = async (req, res) => {
+  let data = {
+    title: req.body.title,
+    text: req.body.text,
+  };
+  const videoResult = await Videos.create(data);
+  res.status(200).send(videoResult);
+};
+
+const addImages = async (req, res) => {
+  let data = {
+    title: req.body.title,
+    Url: req.body.Url,
+  };
+  const ImagesResult = await Images.create(data);
+  res.status(200).send(ImagesResult);
+};
+
+const addComments = async (req, res) => {
+  let data = {
+    title: req.body.title,
+    commentableId: req.body.commentableId,
+    commentype: req.body.commentype,
+  };
+  const CommentsResult = await Comments.create(data);
+  res.status(200).send(CommentsResult);
+};
+
+const getpolymorphic = async (req, res) => {
+  // image to comment
+  // const ImagesResult = await Images.findAll({
+  //   include: [
+  //     {
+  //       model: Comments,
+  //     },
+  //   ],
+  // });
+  // res.status(200).send(ImagesResult);
+
+  // video to comment
+  // const CommentsResult = await Videos.findAll({
+  //   include: [
+  //     {
+  //       model: Comments,
+  //     },
+  //   ],
+  // });
+  // res.status(200).send(CommentsResult);
+
+  // comment to video /Image  //
+
+  const ImagesResult = await Comments.findAll({
+    include: [
+      {
+        model: Images,
+      },
+    ],
+  });
+  res.status(200).send(ImagesResult);
 };
 
 module.exports = {
@@ -126,4 +200,8 @@ module.exports = {
   addTag,
   addPostTag,
   getManytoMany,
+  addVideos,
+  addComments,
+  addImages,
+  getpolymorphic,
 };
