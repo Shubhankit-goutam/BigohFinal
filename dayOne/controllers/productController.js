@@ -1,19 +1,30 @@
 const db = require("../models");
-
+const { validate, validateObj } = require("../middleware/Validation.js");
 const Product = db.products;
 const Review = db.reviews;
+const msg = require("../message.json");
 
-const addProduct = async (req, res) => {
+const addProduct = async (req, res, next) => {
   let info = {
     title: req.body.title,
     price: req.body.price,
     description: req.body.description,
     published: req.body.published ? req.body.published : false,
   };
+  const retData = await validateObj(info);
 
-  const product = await Product.create(info);
-  res.status(200).send(product);
-  console.log(product);
+  if (!retData) {
+    res.send({
+      status: msg.error_status,
+      message: msg.error_message,
+    });
+  } else {
+    const product = await Product.create(info);
+    res.status(200).json({
+      status_code: 200,
+      success_msg: "Created Scucceeded Product",
+    });
+  }
 };
 
 const getAllProducts = async (req, res) => {

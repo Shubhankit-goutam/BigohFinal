@@ -1,5 +1,7 @@
 const { posts } = require("../models");
 const db = require("../models");
+const msg = require("../message");
+const { Sequelize, Op, DataTypes } = require("sequelize");
 
 const Users = db.users;
 const Posts = db.posts;
@@ -14,13 +16,45 @@ const addUser = async (req, res) => {
     Username: req.body.Username,
     UserAddress: req.body.UserAddress,
     UserEmail: req.body.UserAddress,
+    Mobile_Number: req.body.Mobile_Number,
   };
   const userResult = await Users.create(data);
-  res.status(200).send(userResult);
+  res.send({
+    result: userResult,
+    success_msg: msg.success_msg,
+    status: msg.success_code,
+  });
 };
 
 const getAllUsers = async (req, res) => {
-  const users = await Users.findAll();
+  const users = await Users.findAll({
+    where: {
+      // like is case senstive
+      Username: {
+        [Op.like]: "S%", //start with "%S"
+      },
+
+      // Username: { //ILike is case senstive
+      //   [Op.iLike]: "S%", //start with "%S"
+      // },
+      // },
+      // Username: {
+      //   [Op.like]: "%y", //end with "%y"
+      // },
+      // Mobile_Number: {
+      //   [Op.like]: "93%",
+      // },
+    },
+    // Username: {
+    //   [Op.like]: "%iy%", //find Any value  that matches "%iy%" Any Positions
+    // },
+    // paranoid: false, //get  delete data from Paranoid data
+  });
+  // const deletData = await Users.destroy({
+  //   //  restore
+  //   where: { id: 2 }, //soft delete data
+  // });
+
   res.status(200).send(users);
 };
 

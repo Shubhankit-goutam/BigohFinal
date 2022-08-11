@@ -1,7 +1,6 @@
 const productController = require("../controllers/productController.js");
 const reviewController = require("../controllers/reviewController");
 const userController = require("../controllers/UserController");
-
 const router = require("express").Router();
 router.post("/addProduct", productController.addProduct);
 router.get("/allProducts", productController.getAllProducts);
@@ -32,6 +31,6 @@ router.get("/getManytoMany", userController.getManytoMany);
 router.post("/addVideos", userController.addVideos);
 router.post("/addComments", userController.addComments);
 router.post("/addImages", userController.addImages);
-router.get("/getMiage", userController.getpolymorphic);
+router.get("/getImage", userController.getpolymorphic);
 
 module.exports = router;
